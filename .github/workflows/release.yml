@@ -1,0 +1,47 @@
+name: Release
+
+# 打 tag（v0.1.0 这种）就自动出 Windows 安装包并挂到 GitHub Releases。
+# 产物名形如 文献阅读器-0.1.0-win-x64.exe，README 顶部的下载按钮直接指向 Releases 页面。
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  win:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build renderer
+        run: npm run build
+
+      - name: Package and publish to GitHub Releases
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # 国内网络构建时可取消注释，改用 npmmirror
+          # ELECTRON_MIRROR: https://npmmirror.com/mirrors/electron/
+          # ELECTRON_BUILDER_BINARIES_MIRROR: https://npmmirror.com/mirrors/electron-builder-binaries/
+        run: npx electron-builder --win --x64 --publish always
+
+      - name: Upload installers as workflow artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-installer
+          path: |
+            release/**/*.exe
+            release/**/*.blockmap
+            release/**/*.yml
+          if-no-files-found: warn

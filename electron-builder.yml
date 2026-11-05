@@ -6,6 +6,14 @@ directories:
   output: release/${version}
   buildResources: build
 
+# 发布到 GitHub Releases：npm run release:win（需要 GH_TOKEN 环境变量）会把安装包传到
+# https://github.com/xjdxStudies4zhenl/paperReader/releases ，README 顶部的下载按钮就指向这里。
+publish:
+  provider: github
+  owner: xjdxStudies4zhenl
+  repo: paperReader
+  releaseType: release
+
 # 图标来自 public/logo.jpg 生成：build/icon.png(1024) + build/icon.ico(多尺寸)
 win:
   icon: build/icon.ico

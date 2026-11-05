@@ -2,6 +2,20 @@
 
 一个跑在本机的 PDF 文献管理器兼阅读器。文献、批注、笔记、阅读记录都存在你自己的 MySQL 里，断网也能用。划词翻译和 AI 理解可以挂本地 GGUF 模型，文本不出机器。
 
+## 直接下载使用（不用装 Node.js）
+
+[![下载最新版](https://img.shields.io/github/v/release/xjdxStudies4zhenl/paperReader?label=%E4%B8%8B%E8%BD%BD&logo=github&style=for-the-badge)](https://github.com/xjdxStudies4zhenl/paperReader/releases/latest)
+
+点上面的按钮进 Releases 页面，下载最新一版的 `文献阅读器-<版本>-win-x64.exe`，双击安装即可：
+
+- 只装到当前用户目录（`%LOCALAPPDATA%`），**不需要管理员权限**
+- 安装程序已内置 Electron 运行时、pdfjs 资源，装完直接打开，不用再 `npm install`
+- 首次打开填 MySQL 主机、端口、账号、密码，库名默认 `paper_reader`，程序会自己建库建表
+- 本地翻译 / AI 模型（约 1GB）按需在应用内下载，跳过也能用
+
+> Releases 页面打不开时，用镜像地址同样能下：
+> `https://ghproxy.net/https://github.com/xjdxStudies4zhenl/paperReader/releases/latest`
+
 ![文献库](docs/screenshots/01-library.png)
 
 写它的原因很实际：读完一篇论文，批注在 PDF 里、笔记在别的软件里、它属于哪个分类靠脑子记，过两周就找不着了。这里想把这些搁到一块儿——批注、笔记、分类、以及论文之间的引用关系。
@@ -11,12 +25,12 @@
 需要 Windows 10/11、Node.js 20 以上，以及一个能连上的 MySQL 8.x。账号有建库权限就行，表会自己建。
 
 ```bash
-npm config set registry https://registry.npmmirror.com/
-set ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/
 npm install
 npm run build
 npm run app
 ```
+
+仓库里的 `.npmrc` 已经把 registry 和 Electron 二进制都指向 npmmirror 镜像，不用再手动 `npm config set` / `set ELECTRON_MIRROR`。
 
 第一次打开先连数据库：填主机、端口、用户名、密码，库名默认 `paper_reader`，点「保存并初始化」。它会建库（utf8mb4）、执行 `electron/db/schema.sql` 建出 11 张 `pr_*` 表，然后进文献库。连不上的话错误直接显示在弹窗里，多半是密码不对，或者账号不许从 127.0.0.1 登录。
 
@@ -134,6 +148,8 @@ scripts/          建库、自检、演示数据、模型下载
 | --- | --- |
 | `npm run build` | 构建渲染层到 `dist/`（顺带复制 pdfjs 的 cmaps 和标准字体） |
 | `npm run app` | 启动桌面应用，记得先 build |
+| `npm run dist:win` | 只在本机出 Windows 安装包（`release/<版本>/`），不发布 |
+| `npm run release:win` | 打包并上传到 GitHub Releases（需 `GH_TOKEN` 环境变量） |
 | `npm run db:init` / `db:check` | 命令行建库建表 / 查表和行数 |
 | `npm run model:download -- <键>` | 下模型 |
 | `npm run llm:check` | 对推理相关文件跑 `node --check` |

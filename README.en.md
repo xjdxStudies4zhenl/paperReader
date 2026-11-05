@@ -2,6 +2,17 @@
 
 A local-first PDF reading & annotation desktop app built with **Electron + MySQL**.
 
+## Download (no Node.js required)
+
+[![Download latest](https://img.shields.io/github/v/release/xjdxStudies4zhenl/paperReader?label=Download&logo=github&style=for-the-badge)](https://github.com/xjdxStudies4zhenl/paperReader/releases/latest)
+
+Open the Releases page, grab the latest `文献阅读器-<version>-win-x64.exe` and install it:
+
+- Installs per-user into `%LOCALAPPDATA%` — **no administrator rights needed**
+- The Electron runtime and pdfjs assets are bundled; no `npm install` after installing
+- On first launch enter your MySQL host/port/user/password; the app creates the database and tables
+- The optional local translation / AI models (~1GB) are downloaded from inside the app
+
 ## Features
 
 - Import PDFs (file picker or drag & drop), de-duplicated by SHA-256, stored in a local library folder

@@ -22,6 +22,10 @@
     "dist:mac": "npm run build && node scripts/dist.mjs --mac --publish never",
     "dist:linux": "npm run build && node scripts/dist.mjs --linux --publish never",
     "dist:dir": "npm run build && node scripts/dist.mjs --dir --win --x64",
+    "release": "npm run build && node scripts/dist.mjs --publish always",
+    "release:win": "npm run build && node scripts/dist.mjs --win --x64 --publish always",
+    "release:mac": "npm run build && node scripts/dist.mjs --mac --publish always",
+    "release:linux": "npm run build && node scripts/dist.mjs --linux --publish always",
     "dist:win:with-model": "npm run model:stage && npm run dist:win",
     "dist:mac:with-model": "npm run model:stage && npm run dist:mac",
     "dist:linux:with-model": "npm run model:stage && npm run dist:linux"
