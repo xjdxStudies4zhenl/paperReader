@@ -1,0 +1,56 @@
+{
+  "name": "paper-reader",
+  "version": "0.1.0",
+  "private": true,
+  "description": "本地文献阅读与 PDF 标注工具（Electron + MySQL）",
+  "main": "electron/main.js",
+  "scripts": {
+    "postinstall": "node scripts/copy-pdfjs-assets.mjs",
+    "prebuild": "node scripts/copy-pdfjs-assets.mjs",
+    "dev": "vite",
+    "build": "vite build",
+    "start": "npm run build && electron .",
+    "app": "electron .",
+    "db:init": "node scripts/db-init.js",
+    "db:check": "node scripts/db-check.js",
+    "model:download": "node scripts/download-model.mjs",
+    "model:download:chat": "node scripts/download-model.mjs --chat",
+    "model:stage": "node scripts/stage-model.mjs",
+    "llm:check": "node --check electron/llm/llama-core.js && node --check electron/llm/translate-worker.js && node --check electron/llm/translator-service.js && node --check electron/llm/chat-worker.js && node --check electron/llm/local-chat-service.js && node --check electron/ipc/translate.js && node --check electron/ipc/ai.js",
+    "dist": "npm run build && node scripts/dist.mjs --publish never",
+    "dist:win": "npm run build && node scripts/dist.mjs --win --x64 --publish never",
+    "dist:mac": "npm run build && node scripts/dist.mjs --mac --publish never",
+    "dist:linux": "npm run build && node scripts/dist.mjs --linux --publish never",
+    "dist:dir": "npm run build && node scripts/dist.mjs --dir --win --x64",
+    "dist:win:with-model": "npm run model:stage && npm run dist:win",
+    "dist:mac:with-model": "npm run model:stage && npm run dist:mac",
+    "dist:linux:with-model": "npm run model:stage && npm run dist:linux"
+  },
+  "keywords": [
+    "electron",
+    "pdf",
+    "annotation",
+    "mysql",
+    "paper"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "3d-force-graph": "^1.80.1",
+    "d3-force-3d": "^3.0.6",
+    "dompurify": "^3.4.17",
+    "marked": "^18.1.3",
+    "mysql2": "^3.24.6",
+    "node-llama-cpp": "^3.22.2",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^6.5.438",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "three": "^0.187.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.2.1",
+    "electron": "^45.2.1",
+    "electron-builder": "^26.18.0",
+    "vite": "^8.3.5"
+  }
+}

@@ -1,0 +1,322 @@
+/* ========================================================================
+   分类 / 标签（侧边栏树形层级）
+   依赖 app.css 中的设计变量，亮暗主题切换时自动跟随
+   ======================================================================== */
+
+/* ------------------------------- 分区 ------------------------------- */
+
+.meta-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 2px 0;
+}
+
+.meta-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 8px 8px 4px;
+}
+.meta-title {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--muted-2);
+  text-transform: uppercase;
+  user-select: none;
+}
+
+.side-list {
+  list-style: none;
+  margin: 0;
+  padding: 0 6px;
+}
+
+/* ------------------------------- 行 ------------------------------- */
+
+.folder-item {
+  position: relative;
+}
+
+.side-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-height: 28px;
+  padding: 1px 4px 1px 2px;
+  border-radius: 8px;
+  transition: background 0.12s ease;
+}
+.side-row:hover {
+  background: var(--panel);
+}
+.side-row.active {
+  background: var(--accent-soft);
+}
+.side-row.active .side-label {
+  color: var(--accent-text);
+}
+.side-row.drop-active {
+  background: var(--accent-soft);
+  outline: 1.5px solid var(--accent);
+  outline-offset: -1px;
+}
+
+/* 展开 / 折叠箭头 */
+.folder-chevron {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: none;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--muted-2);
+  cursor: pointer;
+  transition: color 0.12s ease, background 0.12s ease;
+}
+.folder-chevron svg {
+  transition: transform 0.15s ease;
+}
+.folder-chevron.open svg {
+  transform: rotate(90deg);
+}
+.folder-chevron:hover {
+  color: var(--text);
+  background: var(--panel-2);
+}
+.folder-chevron.leaf {
+  visibility: hidden; /* 占位对齐 */
+  cursor: default;
+}
+
+/* 名称区（button 重置） */
+.side-label {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  font: inherit;
+  font-size: 12.5px;
+  color: var(--text-soft);
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.12s ease, background 0.12s ease;
+}
+.side-label:hover {
+  color: var(--text);
+  background: var(--panel-2);
+}
+.side-row.active .side-label:hover {
+  background: transparent;
+}
+.side-label-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.row-icon {
+  flex: 0 0 auto;
+  color: var(--muted);
+}
+.tag-dot {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--tag-color, var(--accent));
+  box-shadow: 0 0 5px color-mix(in srgb, var(--tag-color, var(--accent)) 45%, transparent);
+}
+
+/* 文献计数 */
+.count-badge {
+  flex: 0 0 auto;
+  font-size: 10px;
+  line-height: 1.5;
+  min-width: 18px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--panel-2);
+  color: var(--muted-2);
+  text-align: center;
+  transition: opacity 0.12s ease;
+}
+
+/* ------------------------------- 悬停操作按钮 ------------------------------- */
+
+.side-actions {
+  position: absolute;
+  right: 3px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: none;
+  align-items: center;
+  gap: 1px;
+  padding: 1px;
+  border-radius: 7px;
+  background: var(--panel);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+}
+.side-row:hover .side-actions {
+  display: flex;
+}
+.side-row:hover .count-badge {
+  opacity: 0;
+}
+.side-actions .tag-action {
+  font-size: 11px;
+  line-height: 1;
+  padding: 4px 5px;
+  border: none;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--muted-2);
+  cursor: pointer;
+  transition: background 0.1s ease, color 0.1s ease;
+}
+.side-actions .tag-action:hover {
+  background: var(--panel-3);
+  color: var(--text);
+}
+.side-actions .tag-action[title*='删除']:hover {
+  color: var(--danger);
+}
+
+/* ------------------------------- 子级列表与连接线 ------------------------------- */
+
+.folder-children {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 20px; /* 每层缩进 20px */
+  position: relative;
+}
+/* 连接线：对齐父行箭头中心（行内边距 2px + 箭头 20px 的一半 ≈ 13px） */
+.folder-children::before {
+  content: '';
+  position: absolute;
+  left: 13px;
+  top: 0;
+  bottom: 10px;
+  width: 1px;
+  border-radius: 1px;
+  background: var(--border);
+}
+
+/* ------------------------------- 行内表单 ------------------------------- */
+
+.meta-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 4px 6px 8px 26px;
+}
+.meta-form.inline {
+  padding: 8px 0 0;
+}
+.meta-form-input {
+  width: 100%;
+  padding: 5px 8px;
+  border: 1px solid var(--border-strong);
+  border-radius: 7px;
+  background: var(--panel-2);
+  color: var(--text);
+  font-size: 12.5px;
+  outline: none;
+  transition: border-color 0.12s ease;
+}
+.meta-form-input:focus {
+  border-color: var(--accent);
+}
+.meta-form-input:disabled {
+  opacity: 0.6;
+}
+.meta-form-actions {
+  display: flex;
+  gap: 6px;
+}
+.ghost-btn.tiny {
+  padding: 3px 10px;
+  font-size: 11.5px;
+  border-radius: 6px;
+}
+
+/* 标签颜色选择 */
+.color-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.color-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+.color-dot:hover {
+  transform: scale(1.15);
+}
+.color-dot.active {
+  border-color: var(--text);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+
+/* ------------------------------- 其它共用 ------------------------------- */
+
+/* 标签胶囊上的操作按钮（悬停显示） */
+.tag-chip {
+  cursor: pointer;
+}
+.tag-chip .tag-action {
+  display: none;
+  align-items: center;
+  font-size: 10px;
+  line-height: 1;
+  color: inherit;
+  opacity: 0.65;
+}
+.tag-chip:hover .tag-action {
+  display: inline-flex;
+}
+.tag-chip .tag-action:hover {
+  opacity: 1;
+}
+
+/* 下拉框 + 新建按钮 */
+.select-with-add {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.select-with-add select {
+  flex: 1;
+  min-width: 0;
+}
+
+/* 文献详情：从 PDF 解析元数据 */
+.meta-tools {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed var(--border);
+}
+.meta-tools-hint {
+  font-size: 11.5px;
+  color: var(--muted-2);
+  line-height: 1.5;
+}

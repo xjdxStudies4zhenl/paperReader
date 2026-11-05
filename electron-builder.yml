@@ -1,0 +1,81 @@
+appId: ai.local.paper-reader
+productName: 文献阅读器
+copyright: Copyright © 2026 文献阅读器
+
+directories:
+  output: release/${version}
+  buildResources: build
+
+# 图标来自 public/logo.jpg 生成：build/icon.png(1024) + build/icon.ico(多尺寸)
+win:
+  icon: build/icon.ico
+  target:
+    - target: nsis
+      arch: [x64]
+  artifactName: ${productName}-${version}-win-${arch}.${ext}
+
+nsis:
+  oneClick: false
+  perMachine: false
+  # 只允许“仅为我安装”：走 %LOCALAPPDATA%，全程不需要管理员权限。
+  # 之前允许“为所有用户安装”时，安装器会以管理员身份另起一个提权实例去跑旧版卸载器，
+  # 父进程等不到子进程结束就继续写文件，于是报
+  # 「不能打开要写入的文件：<安装目录>\Uninstall 文献阅读器.exe」。
+  allowElevation: false
+  allowToChangeInstallationDirectory: true
+  deleteAppDataOnUninstall: false
+  # 覆盖 electron-builder 默认的「按路径前缀判断应用是否在运行」逻辑，
+  # 并在动文件前清掉旧实例/残留卸载器（详见 build/installer.nsh）
+  include: build/installer.nsh
+  # 快捷方式 / 控制面板里显示的名字
+  shortcutName: 文献阅读器
+  uninstallDisplayName: 文献阅读器 ${version}
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+
+# 只打业务代码；模型、原生二进制走 extraResources / asarUnpack
+files:
+  - dist/**/*
+  - electron/**/*
+  - package.json
+  - '!**/*.map'
+  - '!node_modules/node-llama-cpp/dist/bins/**'
+  - '!**/{test,tests,__tests__,docs,example,examples}/**'
+
+# node-llama-cpp 及其预编译后端是 .node / .dll，必须解包到 asar 之外
+# pdfjs-dist/legacy 供主进程抽取 PDF 正文找 DOI，ESM 从 asar 内加载不可靠，一并解包
+asarUnpack:
+  - node_modules/node-llama-cpp/**
+  - node_modules/@node-llama-cpp/**
+  - node_modules/pdfjs-dist/legacy/build/**
+  - electron/**/*.node
+
+extraResources:
+  # 模型不进 asar、也不进 app 代码：从仓库根的 models/ 拷到 <安装目录>/resources/models。
+  # models/ 平时只有 README（不含 .gguf），所以默认「不内置模型」，安装包体积不受影响；
+  # 想内置就先 `npm run model:stage`（或直接用 dist:*:with-model）把 GGUF 放进去。
+  # 运行时查找顺序：userData/models → resources/models → 仓库 models/。
+  - from: models
+    to: models
+    filter:
+      - '*.gguf'
+
+# 各平台分别构建，不做交叉打包（win/nsis 见文件开头）
+mac:
+  icon: build/icon.png
+  target:
+    - target: dmg
+      arch: [arm64, x64]
+  category: public.app-category.productivity
+  hardenedRuntime: true
+
+linux:
+  icon: build/icon.png
+  target:
+    - AppImage
+    - deb
+  category: Office
+
+# 原生模块禁止 npm rebuild（预编译包直接可用，重建会破坏 asarUnpack 的二进制）
+npmRebuild: false
+buildDependenciesFromSource: false

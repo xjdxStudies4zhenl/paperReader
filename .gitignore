@@ -1,0 +1,48 @@
+﻿# 依赖与构建产物
+node_modules/
+dist/
+release/
+out/
+
+# 缓存、日志
+*.log
+npm-debug.log*
+.cache/
+.vite/
+.eslintcache
+
+# 本地配置（含数据库连接信息，切勿提交）
+.env
+.env.local
+db-config.json
+
+# 数据库与文献文库的本地数据
+data/
+*.sqlite
+*.sqlite3
+
+# 编辑器与系统
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+.DS_Store
+Thumbs.db
+
+# 其他
+coverage/
+tmp/
+temp/
+probe_tmp/
+
+# 开发/自检产物
+.smoke/
+.smoke2/
+.devdb/
+.devdb*.log
+
+# pdfjs 第三方资源（由 npm run build 自动复制）
+public/pdfjs/
+
+# 本地/打包用的大模型文件（可用 npm run model:stage 复制进来，但不要提交）
+models/*.gguf
