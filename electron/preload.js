@@ -159,6 +159,35 @@ const api = {
       return () => ipcRenderer.removeListener('ai:chunk', listener);
     },
   },
+  /** 文献关联的代码仓库（解析论文里的仓库地址 / 绑定本地目录 / 从远程克隆） */
+  repo: {
+    get: (docId) => call('repo:get', docId),
+    detect: (docId) => call('repo:detect', docId),
+    /** 弹目录选择框，选中后整棵复制进 <库根>/repos */
+    bindLocal: (payload) => call('repo:bind-local', payload || {}),
+    /** 直接给路径绑定（只记录路径，不复制） */
+    bindPath: (payload) => call('repo:bind-path', payload || {}),
+    /** 只选目录（给「仅记录路径」用） */
+    pickDir: () => call('repo:pick-dir'),
+    /** 只保存远程地址（还没落本地文件） */
+    saveRemote: (payload) => call('repo:save-remote', payload || {}),
+    clone: (payload) => call('repo:clone', payload || {}),
+    cancel: (docId) => call('repo:cancel', docId),
+    remove: (payload) => call('repo:remove', payload || {}),
+    open: (docId) => call('repo:open', docId),
+    reveal: (docId) => call('repo:reveal', docId),
+    /** 仓库文件树 / 单文件预览 */
+    tree: (docId, options) => call('repo:tree', docId, options || {}),
+    file: (docId, relPath) => call('repo:file', docId, relPath),
+    /** AI 解析用的仓库上下文（目录树 / README / 依赖清单 / 论文信息） */
+    context: (docId) => call('repo:context', docId),
+    /** 复制 / 克隆进度：{ docId, phase: 'copy'|'clone', percent, done, total, label, line } */
+    onProgress: (handler) => {
+      const listener = (_event, payload) => handler(payload);
+      ipcRenderer.on('repo:progress', listener);
+      return () => ipcRenderer.removeListener('repo:progress', listener);
+    },
+  },
   notes: {
     list: (docId) => call('note:list', docId),
     get: (id) => call('note:get', id),

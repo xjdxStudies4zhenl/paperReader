@@ -10,6 +10,7 @@ const { registerStorageHandlers } = require('./storage');
 const { registerTranslateHandlers } = require('./translate');
 const { registerAiHandlers } = require('./ai');
 const { registerNoteHandlers } = require('./notes');
+const { registerRepoHandlers } = require('./repo');
 
 function registerIpc(getWindow) {
   const ctx = { getWindow };
@@ -21,6 +22,7 @@ function registerIpc(getWindow) {
   registerTranslateHandlers(ctx);
   registerAiHandlers(ctx);
   registerNoteHandlers(ctx);
+  registerRepoHandlers(ctx);
 }
 
 module.exports = { registerIpc };

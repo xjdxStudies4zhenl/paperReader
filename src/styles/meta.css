@@ -320,3 +320,515 @@
   color: var(--muted-2);
   line-height: 1.5;
 }
+
+/* ------------------------------- 文献详情：代码仓库 ------------------------------- */
+
+.repo-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel-2);
+}
+.repo-card.empty {
+  border-style: dashed;
+}
+
+.repo-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.repo-name {
+  font-size: 13px;
+  color: var(--text);
+  font-weight: 600;
+}
+.repo-badge {
+  font-size: 10.5px;
+  line-height: 1.6;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: var(--panel-3, var(--panel));
+  color: var(--muted-2);
+  border: 1px solid var(--border);
+}
+.repo-badge.mode-clone {
+  color: var(--accent-text);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.repo-badge.mode-copy {
+  color: #37c98b;
+  border-color: rgba(55, 201, 139, 0.5);
+  background: rgba(55, 201, 139, 0.12);
+}
+.repo-badge.mode-link {
+  color: #ffb020;
+  border-color: rgba(255, 176, 32, 0.5);
+  background: rgba(255, 176, 32, 0.12);
+}
+.repo-branch {
+  font-size: 11px;
+  color: var(--muted-2);
+  font-family: 'Cascadia Mono', Consolas, monospace;
+}
+
+.repo-link {
+  align-self: flex-start;
+  max-width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: 12px;
+  color: var(--accent-text);
+  text-align: left;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.repo-link:hover {
+  text-decoration: underline;
+}
+
+.repo-path {
+  display: block;
+  font-family: 'Cascadia Mono', Consolas, monospace;
+  font-size: 11px;
+  color: var(--muted-2);
+  padding: 5px 8px;
+  border-radius: 6px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  word-break: break-all;
+  user-select: text;
+}
+
+.repo-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 11.5px;
+  color: var(--muted-2);
+}
+.repo-dim {
+  color: var(--muted-2);
+}
+.repo-warn {
+  color: var(--danger);
+}
+
+.repo-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.repo-actions .primary-btn.tiny,
+.primary-btn.tiny {
+  padding: 4px 12px;
+  font-size: 11.5px;
+  border-radius: 6px;
+}
+.ghost-btn.tiny.danger {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+.repo-input {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: 7px;
+  background: var(--panel);
+  color: var(--text);
+  font-size: 12.5px;
+  font-family: 'Cascadia Mono', Consolas, monospace;
+  outline: none;
+  transition: border-color 0.12s ease;
+}
+.repo-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.repo-input:disabled {
+  opacity: 0.6;
+}
+
+.repo-options {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.repo-check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--muted-2);
+  cursor: pointer;
+  user-select: none;
+}
+.repo-check input {
+  accent-color: var(--accent);
+}
+
+.repo-detected {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 11.5px;
+}
+.repo-url-chip {
+  padding: 2px 8px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--text-soft);
+  font: inherit;
+  font-size: 11.5px;
+  cursor: pointer;
+  transition: border-color 0.12s ease, color 0.12s ease;
+}
+.repo-url-chip:hover {
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+
+.repo-hint {
+  font-size: 11.5px;
+  color: var(--muted-2);
+  line-height: 1.6;
+}
+.repo-hint code {
+  background: var(--panel);
+  padding: 1px 4px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+.repo-saved {
+  color: #37c98b;
+}
+.repo-inline-btn {
+  margin-left: 8px;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: 11px;
+  color: var(--muted-2);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.repo-inline-btn:hover {
+  color: var(--danger);
+}
+
+.repo-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.repo-progress-bar {
+  height: 5px;
+  border-radius: 999px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.repo-progress-bar > span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent), #7c5cff);
+  transition: width 0.2s ease;
+}
+.repo-progress-bar > span.indeterminate {
+  animation: repo-indeterminate 1.1s ease-in-out infinite;
+}
+@keyframes repo-indeterminate {
+  0% { margin-left: -20%; }
+  100% { margin-left: 100%; }
+}
+.repo-progress-text {
+  font-size: 11.5px;
+  color: var(--muted-2);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------- 仓库 AI 解析 ------------------------------- */
+
+.repo-ai {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 2px;
+  padding-top: 9px;
+  border-top: 1px dashed var(--border);
+}
+.repo-ai-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-soft);
+}
+.repo-ai-provider {
+  margin-left: auto;
+  font-size: 10.5px;
+  color: var(--muted-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.repo-ai-modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.repo-ai-mode {
+  padding: 2px 9px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--muted-2);
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+  transition: border-color 0.12s ease, color 0.12s ease, background 0.12s ease;
+}
+.repo-ai-mode:hover:not(:disabled) {
+  border-color: var(--border-strong);
+  color: var(--text-soft);
+}
+.repo-ai-mode.active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+.repo-ai-mode:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+.repo-ai-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.repo-ai-output {
+  max-height: 340px;
+  overflow: auto;
+  padding: 9px 11px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel);
+  font-size: 12.2px;
+  line-height: 1.7;
+  user-select: text;
+}
+.repo-ai-output .markdown-body {
+  font-size: 12.2px;
+}
+.repo-ai-output .markdown-body > :first-child {
+  margin-top: 0;
+}
+.repo-ai-meta {
+  display: flex;
+  gap: 10px;
+  font-size: 10.5px;
+  color: var(--muted-2);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------- 仓库文件树 ------------------------------- */
+
+.repo-browser {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 2px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border);
+  min-height: 0;
+}
+.repo-browser-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-soft);
+}
+.repo-tree-count {
+  font-size: 10.5px;
+  color: var(--muted-2);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0 7px;
+}
+.repo-tree {
+  max-height: 280px;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel);
+  padding: 4px 0;
+}
+.repo-browser.compact .repo-tree {
+  max-height: none;
+  flex: 1;
+}
+.repo-tree-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.repo-tree-item {
+  margin: 0;
+}
+.repo-tree-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+  padding: 3px 8px;
+  border: none;
+  background: transparent;
+  font: inherit;
+  font-size: 12px;
+  color: var(--text-soft);
+  text-align: left;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.repo-tree-row:hover {
+  background: var(--panel-2);
+  color: var(--text);
+}
+.repo-tree-row.is-dir {
+  color: var(--text-soft);
+  font-weight: 500;
+}
+.repo-tree-caret {
+  flex: 0 0 10px;
+  font-size: 9px;
+  color: var(--muted-2);
+}
+.repo-tree-icon {
+  flex: 0 0 auto;
+  font-size: 11.5px;
+  opacity: 0.85;
+}
+.repo-tree-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.repo-tree-size {
+  flex: 0 0 auto;
+  font-size: 10.5px;
+  color: var(--muted-2);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 文件预览 */
+.repo-viewer-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(0, 0, 0, 0.45);
+  display: grid;
+  place-items: center;
+  padding: 32px;
+}
+.repo-viewer {
+  width: min(900px, 92vw);
+  height: min(680px, 82vh);
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  border: 1px solid var(--border-strong);
+  background: var(--panel);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+}
+.repo-viewer-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-soft);
+}
+.repo-viewer-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.repo-viewer-size {
+  font-size: 11px;
+  color: var(--muted-2);
+}
+.repo-viewer-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 12px 14px;
+}
+.repo-viewer-code {
+  margin: 0;
+  font-family: 'Cascadia Mono', Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text);
+  white-space: pre;
+  tab-size: 4;
+  user-select: text;
+}
+
+/* 阅读器右侧码仓面板 */
+.repo-panel {
+  width: 360px;
+  flex: 0 0 360px;
+  border-left: 1px solid var(--border);
+  background: var(--bg-soft);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.repo-panel-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 0 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.repo-panel-body .repo-field > span {
+  display: none;
+}
+.repo-panel-body .repo-card {
+  padding: 9px 10px;
+}
+.repo-panel-body .repo-actions .ghost-btn.tiny,
+.repo-panel-body .repo-actions .primary-btn.tiny {
+  padding: 3px 8px;
+  font-size: 11px;
+}
+.repo-panel-body .repo-input {
+  font-size: 11.5px;
+}
+.repo-field.compact .repo-tree {
+  max-height: 46vh;
+}

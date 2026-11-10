@@ -183,6 +183,30 @@ INSERT INTO pr_setting_info (setting_key, setting_value) VALUES
   ('schema_version', '1')
 ON DUPLICATE KEY UPDATE setting_value = setting_value;
 
+-- 12. 文献关联的代码仓库（一篇文献最多绑定一个仓库）
+-- local_path 三种形态：
+--   NULL                = 只记了远程地址，还没落本地文件（bind_mode='remote'）
+--   绝对路径            = 用户选择「只记录路径」的外部目录
+--   相对 <库根>/repos   = 复制进来 / 克隆下来的，换文库目录后仍然有效
+CREATE TABLE IF NOT EXISTS pr_repo_info (
+  id             BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '仓库ID',
+  doc_id         BIGINT UNSIGNED NOT NULL              COMMENT '文献ID',
+  remote_url     VARCHAR(512)    NULL                  COMMENT '远程仓库地址（规范化后的 https 地址）',
+  provider       VARCHAR(32)     NULL                  COMMENT 'github/gitlab/gitee/bitbucket/other',
+  repo_name      VARCHAR(191)    NULL                  COMMENT '仓库名',
+  local_path     VARCHAR(1024)   NULL                  COMMENT '绝对路径或相对 <库根>/repos 的路径；NULL 表示只有远程地址',
+  bind_mode      VARCHAR(16)     NOT NULL DEFAULT 'copy' COMMENT 'remote=只有地址 / copy=复制进文库 / link=仅记录路径 / clone=从远程克隆',
+  default_branch VARCHAR(128)    NULL                  COMMENT '默认分支（克隆时读取 .git/HEAD）',
+  file_count     INT UNSIGNED    NOT NULL DEFAULT 0    COMMENT '文件数',
+  size_bytes     BIGINT UNSIGNED NOT NULL DEFAULT 0    COMMENT '占用字节数',
+  last_sync_at   DATETIME        NULL                  COMMENT '最近一次复制/克隆时间',
+  created_at     DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at     DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uk_pr_repo_info_doc (doc_id),
+  CONSTRAINT fk_pr_repo_info_doc FOREIGN KEY (doc_id) REFERENCES pr_doc_info (id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='文献代码仓库信息表';
+
 -- 11. 页面译文缓存（「一键翻译」的本地持久化）
 -- 原文指纹变化时旧缓存自然失效，不阻塞重新翻译
 CREATE TABLE IF NOT EXISTS pr_page_translate_rd (

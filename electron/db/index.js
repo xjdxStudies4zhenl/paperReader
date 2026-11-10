@@ -117,17 +117,26 @@ const COLUMN_MIGRATIONS = [
     column: 'orig_name',
     ddl: "ALTER TABLE pr_doc_info ADD COLUMN orig_name VARCHAR(255) NULL COMMENT '导入时的原始文件名' AFTER stored_path",
   },
+  {
+    // 只记远程地址、还没落本地文件时 local_path 为 NULL（列存在性检查不够，必须每次都对一遍）
+    table: 'pr_repo_info',
+    column: 'local_path',
+    always: true,
+    ddl: "ALTER TABLE pr_repo_info MODIFY COLUMN local_path VARCHAR(1024) NULL COMMENT '绝对路径或相对 <库根>/repos 的路径；NULL 表示只有远程地址'",
+  },
 ];
 
 async function ensureColumns(database) {
   const applied = [];
   for (const item of COLUMN_MIGRATIONS) {
-    const row = await queryOne(
-      `SELECT COUNT(*) AS cnt FROM information_schema.columns
-        WHERE table_schema = ? AND table_name = ? AND column_name = ?`,
-      [database, item.table, item.column]
-    );
-    if (row && Number(row.cnt) > 0) continue;
+    if (!item.always) {
+      const row = await queryOne(
+        `SELECT COUNT(*) AS cnt FROM information_schema.columns
+          WHERE table_schema = ? AND table_name = ? AND column_name = ?`,
+        [database, item.table, item.column]
+      );
+      if (row && Number(row.cnt) > 0) continue;
+    }
     try {
       await execute(item.ddl);
       applied.push(`${item.table}.${item.column}`);

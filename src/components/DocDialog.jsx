@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { api, guard, toast } from '../api.js';
+import RepoSection from './RepoSection.jsx';
 
 /** 文献详情编辑：元数据、分类、星标、标签 */
 export default function DocDialog({ doc, folders, allTags = [], onCreateFolder, onClose, onSaved, onOpen }) {
@@ -324,6 +325,9 @@ export default function DocDialog({ doc, folders, allTags = [], onCreateFolder, 
               />
             </div>
           </div>
+
+          {/* 代码仓库：解析论文里的 GitHub 地址、绑定本地目录、或直接从远程克隆 */}
+          <RepoSection docId={doc.id} />
         </div>
 
         <footer className="modal-foot">

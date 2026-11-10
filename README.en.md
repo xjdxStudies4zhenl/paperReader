@@ -20,6 +20,8 @@ Open the Releases page, grab the latest `文献阅读器-<version>-win-x64.exe` 
 - Annotations: **highlight (incl. red)**, underline, strikethrough, rectangle, freehand pen, sticky notes
 - Annotation side panel: grouped by page, filterable, searchable, jump-to-page, per-annotation comments/replies
 - Export: annotation digest as Markdown, or a flattened "annotated PDF" with marks burned in (pdf-lib)
+- Code repositories (paper detail page): parse GitHub / GitLab / Gitee URLs out of the PDF, bind a local
+  repo (copied into `<library>/repos`) or `git clone` it, with live progress and a link-only mode
 - All data lives in your own MySQL instance; connection password is encrypted with Electron safeStorage
 
 ## Quick start

@@ -9,6 +9,7 @@ import TranslatePopover from './TranslatePopover.jsx';
 import AiPanel from './AiPanel.jsx';
 import SelectionBubble from './SelectionBubble.jsx';
 import DocNoteDialog from './DocNoteDialog.jsx';
+import RepoPanel from './RepoPanel.jsx';
 import { useTranslation } from '../translate.js';
 
 export const HIGHLIGHT_COLORS = [
@@ -102,6 +103,8 @@ export default function Reader({
   const [navOpen, setNavOpen] = useState(false);
   /** 本文笔记编辑器 */
   const [noteOpen, setNoteOpen] = useState(false);
+  /** 右侧「码仓」面板：和批注面板互斥 */
+  const [repoOpen, setRepoOpen] = useState(false);
   /** 菜单用 fixed 定位，避免被顶栏的 overflow 裁剪 */
   const [menuPos, setMenuPos] = useState({ top: 0, right: 0 });
   const menuRef = useRef(null);
@@ -971,15 +974,18 @@ export default function Reader({
           <span className="page-total">/ {pdfDoc ? pdfDoc.numPages : '—'}</span>
         </div>
 
-        <div className="menu-wrap" ref={menuRef}>
-          <button
-            ref={menuBtnRef}
-            className={`ghost-btn ${menuOpen ? 'active' : ''}`}
-            title="导出 / AI 摘要 / 一键翻译（点开选择）"
-            onClick={toggleMenu}
-          >
-            {menuLabel} <span className="caret">▾</span>
-          </button>
+        <div className="reader-actions">
+          <div className="menu-wrap" ref={menuRef}>
+            <button
+              ref={menuBtnRef}
+              className={`head-action ${menuOpen ? 'active' : ''}`}
+              title="导出 / AI 摘要 / 一键翻译（点开选择）"
+              onClick={toggleMenu}
+            >
+              <span className="head-icon">⋯</span>
+              <span className="head-label">{menuLabel}</span>
+              <span className="caret">▾</span>
+            </button>
           {menuOpen && (
             <div className="menu-panel" role="menu" style={{ top: menuPos.top, right: menuPos.right }}>
               <button
@@ -1061,16 +1067,44 @@ export default function Reader({
             </div>
           )}
         </div>
-        <button
-          className={`ghost-btn ${noteOpen ? 'active' : ''}`}
-          onClick={() => setNoteOpen(true)}
-          title="给这篇文献写笔记（Markdown，自动保存到数据库）"
-        >
-          📝 笔记
-        </button>
-        <button className={`ghost-btn ${panelOpen ? 'active' : ''}`} onClick={() => setPanelOpen((v) => !v)}>
-          批注 {annos.length}
-        </button>
+
+          <button
+            type="button"
+            className={`head-action ${repoOpen ? 'active' : ''}`}
+            onClick={() => {
+              setRepoOpen((v) => !v);
+              setPanelOpen(false);
+            }}
+            title="这篇文献关联的代码仓库：绑定本地仓库 / 从远程克隆 / 浏览仓库文件"
+          >
+            <span className="head-icon">📦</span>
+            <span className="head-label">码仓</span>
+          </button>
+
+          <button
+            type="button"
+            className={`head-action ${noteOpen ? 'active' : ''}`}
+            onClick={() => setNoteOpen(true)}
+            title="给这篇文献写笔记（Markdown，自动保存到数据库）"
+          >
+            <span className="head-icon">📝</span>
+            <span className="head-label">笔记</span>
+          </button>
+
+          <button
+            type="button"
+            className={`head-action ${panelOpen ? 'active' : ''}`}
+            onClick={() => {
+              setRepoOpen(false);
+              setPanelOpen((v) => !v);
+            }}
+            title="右侧批注面板"
+          >
+            <span className="head-icon">💬</span>
+            <span className="head-label">批注</span>
+            {annos.length ? <span className="head-count">{annos.length}</span> : null}
+          </button>
+        </div>
       </header>
 
       {/* Ctrl+F 搜索面板 */}
@@ -1160,6 +1194,8 @@ export default function Reader({
             onRemove={handleRemoveAnno}
           />
         )}
+
+        {repoOpen && <RepoPanel docId={docId} onClose={() => setRepoOpen(false)} />}
       </div>
 
       {selBubble && (
